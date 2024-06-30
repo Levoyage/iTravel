@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignore node_modules folder
+/frontend/travel-guide-app/node_modules
+
