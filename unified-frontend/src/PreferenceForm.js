@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';  // Removed useParams
 import './PreferenceForm.css';
 
-const PreferenceForm = ({ onSubmit }) => {
-    const { destination } = useParams();
+const PreferenceForm = ({ onSubmit}) => {  // Accept destination as a prop
+    const location = useLocation();
+    const { destination } = location.state || {}; // 获取传递的 destination
     const navigate = useNavigate();
     const categories = [
         'Natural landscapes',
@@ -12,9 +13,7 @@ const PreferenceForm = ({ onSubmit }) => {
         'Cultural sites'
     ];
 
-    const [checkedState, setCheckedState] = useState(
-        new Array(categories.length).fill(false)
-    );
+    const [checkedState, setCheckedState] = useState(new Array(categories.length).fill(false));
 
     useEffect(() => {
         console.log("Received destination:", destination);

@@ -22,8 +22,8 @@ public class KimiController {
     @Value("${kimi.api.token}")
     private String kimiApiToken;
 
-    @PostMapping("/recommendations")
-    public ResponseEntity<Map<String, Object>> getRecommendations(@RequestBody Map<String, Object> request) {
+    @PostMapping("/{type}")
+    public ResponseEntity<Map<String, Object>> forwardRequest(@PathVariable String type, @RequestBody Map<String, Object> request) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
