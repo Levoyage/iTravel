@@ -11,9 +11,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document(collection = "travelGuides")
 public class TravelGuide {
-
     @Id
     private String id;
     private String destination;
     private String guide;
+    private String time;
+    private String description;
 }

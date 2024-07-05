@@ -10,16 +10,55 @@ const App = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [guide, setGuide] = useState('');
   const [loading, setLoading] = useState(false);
-  const [destination,setDestination] = useState(''); //新增destination状态
+  const [destination, setDestination] = useState('');
+  const [days, setDays] = useState(1); // 新增状态来存储出行天数
 
-  const parseContent = (text) => {
+  const parseContent = (responseBody) => {
+    // Regular expression to match each day along with its activities
+    const dayRegex = /-\s\*\*Day\s(\d+):\s(.*?)\*\*\n(.*?)(?=\n- \*\*Day|\n\n- \*\*Day|\n\*\*Day|$)/gs;
+    const activityRegex = /-\s(Morning|Late Morning|Afternoon|Evening):\s(.*?)\n/gs;
+  
+    let guide = [];
+    
+    let dayMatch;
+    while ((dayMatch = dayRegex.exec(responseBody))) {
+      let dayNumber = dayMatch[1];
+      let dayTheme = dayMatch[2];
+      let activities = dayMatch[3];
+  
+      let dayActivities = [];
+      let activityMatch;
+      while ((activityMatch = activityRegex.exec(activities))) {
+        let time = activityMatch[1];
+        let description = activityMatch[2].trim();
+  
+        dayActivities.push({
+          time,
+          description
+        });
+      }
+  
+      guide.push({
+        day: `Day ${dayNumber}: ${dayTheme}`,
+        activities: dayActivities
+      });
+    }
+  
+    return guide;
+  };
+  
+
+  /*const parseContent = (text) => {
     const items = [];
     const lines = text.split('\n');
     lines.forEach(line => {
-      items.push(line);
+      // 去除行中的双星号
+      const cleanedLine = line.replace(/\\(.+?)\\/g, '$1');
+      items.push(cleanedLine);
     });
     return items;
-  };
+  };*/
+
 
   const parseRecommendations = (text) => {
     const recommendations = [];
@@ -49,7 +88,6 @@ const App = () => {
     return recommendations;
   };
 
-
   const fetchContentFromBackend = async (destination, type, bodyContent) => {
     setLoading(true);
     try {
@@ -61,6 +99,7 @@ const App = () => {
         body: JSON.stringify(bodyContent)
       });
       const data = await response.json();
+
       if (type === 'recommendations') {
         setRecommendations(parseRecommendations(data.choices[0].message.content));
       } else if (type === 'guide') {
@@ -73,13 +112,23 @@ const App = () => {
     }
   };
 
-  const handleGuideSubmit = async (destination) => {
-    setDestination(destination);// Set the destination
+  const handleGuideSubmit = async (destination, days) => {
+    setDestination(destination); // 设置 destination
+    setDays(days); // 设置 days
     await fetchContentFromBackend(destination, 'guide', {
       model: 'kimi',
       messages: [{
         role: 'user',
-        content: `Generate a general travel itinerary for ${destination} based on the current season, outlining activities for each day. Decide the number of days based on your experience (Format: Day 1:..., Day 2:...). List the activities in an itemized format and keep the description under 300 words.`
+        content: `Generate a general travel itinerary for ${destination} for ${days} day(s) based on the current season, outlining activities for each day. List the activities in an itemized format and keep the description under 300 words. Please provide a detailed itinerary in a structured format for a trip lasting [number of days] days. Each day should be clearly labeled starting from Day 1 to Day [number of days], followed by a descriptive title for the day's theme. Each activity should be listed with a specific time block (Morning, Late Morning, Afternoon, Evening). Here is the format I need:
+
+- **Day 1: [Theme of the Day]**
+  - Morning: [Activity]
+  - Late Morning: [Activity]
+  - Afternoon: [Activity]
+  - Evening: [Activity]
+
+Continue this format for each subsequent day.
+Be realistic, espeacially for one (or two)-day trip. Only include the itinerary details and activities without any additional commentary (eg."Certainly! Here is...").`
       }],
       use_search: false,
       stream: false
@@ -97,7 +146,6 @@ const App = () => {
       use_search: false,
       stream: false
     });
-
   };
 
   console.log({ HomePage, GuidePage, PreferenceForm, RecommendationList });
@@ -115,10 +163,6 @@ const App = () => {
           <Route path="/guide" element={loading ? <div className="loading-spinner"></div> : <GuidePage guide={guide} />} />
           <Route path="/preferences" element={<PreferenceForm onSubmit={handleSubmit} />} />
           <Route path="/recommendations" element={loading ? <div className="loading-spinner"></div> : <RecommendationList recommendations={recommendations} />} />
-          {/*去掉条件过滤测试<Route path="/" element={<div>Home Page</div>} />
-          <Route path="/guide" element={<div>Guide Page</div>} />
-          <Route path="/preferences" element={<div>Preferences Page</div>} />
-          <Route path="/recommendations" element={<div>Recommendations Page</div>} />*/}
         </Routes>
       </div>
     </Router>
