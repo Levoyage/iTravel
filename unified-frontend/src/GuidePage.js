@@ -5,7 +5,8 @@ import './GuidePage.css'; // 引入自定义 CSS
 const GuidePage = ({ guide }) => {
   const location = useLocation();
   const destination = location.state?.destination;
-
+  
+  //Debug
   useEffect(() => {
     console.log("Received destination:", destination);
     console.log("Guide data received:", guide);
@@ -18,23 +19,26 @@ const GuidePage = ({ guide }) => {
   return (
     <div className="guide-page">
       {guide.length > 0 ? (
-        guide.map((day, index) => (
-          <div key={index} className="guide-card">
-            <h2>{day.day}</h2>
-            <div className="guide-content">
-              {day.activities.map((activity, idx) => (
-                <div key={idx}>
-                  <h3>{activity.time}</h3>
-                  <p>{activity.description}</p>
-                </div>
-              ))}
+        <div>
+          {guide.map((day, index) => (
+            <div key={index} className="guide-card">
+              <h2>{day.day}</h2>
+              <div className="guide-content">
+                {day.activities.map((activity, idx) => (
+                  <div key={idx}>
+                    <h3>{activity.time}</h3>
+                    <p>{activity.description}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <button className="save-button">Save</button>
-          </div>
-        ))
+          ))}
+          <button className="save-button">Save</button>
+        </div>
       ) : (
         <p>No guide available. Please return home and submit a destination.</p>
       )}
+      <Link to="/preferences" state={{ destination }}>Recommend Attractions and Activities</Link>
     </div>
   );
 };

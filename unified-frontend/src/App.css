@@ -60,3 +60,23 @@
     transform: rotate(360deg);
   }
 }
+
+nav {
+  background-color: #f4f4f4; /* Light grey background */
+  padding: 10px 20px; /* Padding around the content */
+  text-align: center; /* Center-align the navigation links */
+}
+
+nav a {
+  color: #333; /* Dark grey text color for links */
+  padding: 12px 20px; /* Padding around each link */
+  margin: 0 10px; /* Space between links */
+  text-decoration: none; /* Remove underline from links */
+  font-size: 18px; /* Increase font size */
+  border-radius: 5px; /* Rounded corners for links */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+nav a:hover {
+  background-color: #ddd; /* Light grey background on hover */
+}

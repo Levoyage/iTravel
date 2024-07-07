@@ -113,8 +113,8 @@ const App = () => {
   };
 
   const handleGuideSubmit = async (destination, days) => {
-    setDestination(destination); // 设置 destination
-    setDays(days); // 设置 days
+    setDestination(destination); 
+    setDays(days); 
     await fetchContentFromBackend(destination, 'guide', {
       model: 'kimi',
       messages: [{
