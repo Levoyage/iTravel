@@ -1,9 +1,9 @@
 package com.example.iTravel.config;
 
+import com.example.iTravel.filters.JwtFilter;
 import com.example.iTravel.security.AuthEntryPointJwt;
 import com.example.iTravel.security.AuthTokenFilter;
 import com.example.iTravel.service.UserDetailsServiceImpl;
-import com.example.iTravel.filters.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -91,7 +91,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // 公共端点 - 允许未登录用户查看 guides 列表
-                        .requestMatchers("/", "/home", "/guide", "/guides/**", "/preferences", "/recommendations", "/pois","/auth/**", "/download_avatar/**").permitAll()
+                        .requestMatchers("/", "/home", "/guide", "/guides/**", "/preferences", "/recommendations", "/pois","/api/auth/login", "/api/auth/signup" ,"/api/auth/me","/download_avatar/**").permitAll()
                         // 需要认证的端点 - 限制访问 POST 请求
                         .requestMatchers(HttpMethod.POST, "/api/guides/guide").authenticated()
                         .requestMatchers("/test/**", "/upload_avatar").authenticated()

@@ -4,19 +4,28 @@ import { Navigate, Link } from 'react-router-dom';
 import UserAvatar from './UserAvatar';
 import UserGuides from './UserGuides';
 import UserPOIs from './UserPOIs';
+import LoadingSpinner from './LoadingSpinner';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     console.log('ProfilePage user:', user); // 检查 user 对象是否正确传递
-  }, [user]);
+  }, [user, loading]);// 依赖项为 user 和 loading，只有它们变化时才会执行
 
-  if (!user || !user.id) { // 确保 user 和 user.id 存在
-    console.log('Navigating to login page due to missing user or user.id');
-    return <Navigate to="/login" />;
+  //在用户数据未加载完成时（即 loading 为 true），不进行重定向或者渲染内容，等待数据加载完成后再执行登录检查和渲染页面
+   if (loading) {
+    return <LoadingSpinner />;
   }
+
+
+    if (!user || !user.id) {
+        console.log('No user found, redirecting to login');
+    } else {
+        console.log('User found:', user);
+    }
+  
 
   return (
     <div className="profile-container">

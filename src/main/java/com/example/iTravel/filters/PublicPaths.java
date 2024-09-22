@@ -16,7 +16,7 @@ public class PublicPaths {
             "/guide",
             "/preferences",
             "/recommendations",
-            "/auth/",
+            "api/auth/me",
             "/download_avatar/",
             "/pois"
     };

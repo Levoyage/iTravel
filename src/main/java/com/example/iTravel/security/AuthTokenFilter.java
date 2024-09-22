@@ -35,30 +35,27 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String path = request.getRequestURI();
 
-            // 允许 /api/auth/** 路径的请求通过，不进行 JWT 验证
-            if (path.startsWith("/api/auth/")) {
-                logger.info("Allowing request to pass through without JWT validation: {}", path);
+            // Allow only login and signup requests to bypass JWT validation
+            if (path.equals("/api/auth/login") || path.equals("/api/auth/signup")) {
+                logger.info("Allowing login or signup request to pass through without JWT validation: {}", path);
                 filterChain.doFilter(request, response);
                 return;
             }
 
+            // Parse and validate the JWT token for all other requests
             String jwt = parseJwt(request);
-            if (jwt != null) {
-                if (jwtUtils.validateJwtToken(jwt)) {
-                    String username = jwtUtils.getUserNameFromJwtToken(jwt);
-                    logger.info("Authenticated user: {}", username);
+            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+                String username = jwtUtils.getUserNameFromJwtToken(jwt);
+                logger.info("Authenticated user: {}", username);
 
-                    UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                } else {
-                    logger.warn("JWT token is invalid or expired");
-                }
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                logger.warn("No JWT token found in request");
+                logger.warn("Invalid or missing JWT token");
             }
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e);

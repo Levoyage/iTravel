@@ -1,83 +1,77 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
+// Create the AuthContext
 const AuthContext = createContext();
 
+// Provide the context to children components
 export const AuthProvider = ({ children }) => {
-  // 修改: 添加 loading 状态
+  // Persisted user and token states
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Check if user is authenticated (based on token and isAuthenticated flag)
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await axios.get('http://localhost:8080/api/auth/me', {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
-          console.log("User data fetched:", response.data); // 调试信息
-          setUser(response.data);
-        } catch (error) {
-          console.error('Auth check failed:', error);
+    const token = localStorage.getItem('token');
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
 
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-        }
-      }
-      // 修改: 设置 loading 为 false，表示认证检查完成
-      setLoading(false);
-    };
+    console.log("Token on refresh:", token);
+    console.log("isAuthenticated on refresh:", isAuthenticated);
 
-    checkAuth();
+    // If both the token and isAuthenticated flag are valid
+    if (token && isAuthenticated) {
+      checkAuth(token);
+    } else {
+      setLoading(false);  // Stop loading if no valid token or flag
+    }
   }, []);
 
+  // Check authentication by sending the token to the backend
+  const checkAuth = async (token) => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/auth/me', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(response.data);
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      setUser(null);  // Reset user if the auth check fails
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle login logic
   const login = async (username, password) => {
     try {
       const response = await axios.post('http://localhost:8080/api/auth/login', { username, password });
-      setUser(response.data);
-      localStorage.setItem('token', response.data.token);
-      // 修改: 移除存储用户信息，仅保存 token
+      const { token, ...userData } = response.data;
+
+      // Store token and authenticated status
+      localStorage.setItem('token', token);
+      localStorage.setItem('isAuthenticated', 'true');
+      setUser(userData);  // Update the user state
     } catch (error) {
-      console.error('Login failed:', error.response ? error.response.data : error.message);
+      console.error('Login failed:', error);
       throw error;
     }
   };
 
-  const register = async (username, email, password) => {
-    try {
-      const response = await axios.post('http://localhost:8080/api/auth/signup', { username, email, password });
-      setUser(response.data);
-      localStorage.setItem('token', response.data.token);
-      // 修改: 移除存储用户信息，仅保存 token
-    } catch (error) {
-      console.error('Registration failed:', error.response ? error.response.data : error.message);
-      throw error;
-    }
-  };
-
+  // Handle logout logic
   const logout = () => {
     setUser(null);
     localStorage.removeItem('token');
-    // 修改: 确保同时移除 user 信息
-    localStorage.removeItem('user');
+    localStorage.removeItem('isAuthenticated'); // Clear authenticated flag
   };
 
-  const updateUser = (updatedUser) => {
-    setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser)); // Ensure the updated user data is stored
-  };
-
-  // 修改: 在 context value 中包含 loading 状态
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, updateUser, loading }}>
-      {children}
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
+      {!loading ? children : <div>Loading...</div>}  {/* Show loading spinner */}
     </AuthContext.Provider>
   );
 };
 
+// Hook to use the AuthContext in other components
 export const useAuth = () => {
   return useContext(AuthContext);
 };
