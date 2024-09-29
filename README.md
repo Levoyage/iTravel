@@ -3,8 +3,10 @@ iTravel 1.0 Version, capable of generating travel itineraries based on user-ente
 ## Collaborators
 
 - [@Aria](https://github.com/Levoyage) 
-- [@Roxie](https://github.com/Roxie-Deng) 
+- [@Roxie](https://github.com/Roxie-Deng)
 
+
+The deployment is currently in progress. Before that, you can review these previews. :)
 1. Home Page(Photo by@Aria)
 ![Home page preview](https://i.imgur.com/vuuL7FG.jpeg)
 2. User profile page
