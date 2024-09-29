@@ -10,7 +10,7 @@ The deployment is currently in progress. Before that, you can review these previ
 1. Home Page(Photo by@Aria)
 ![Home page preview](https://i.imgur.com/vuuL7FG.jpeg)
 2. User profile page
-![User profile page preview](https://i.imgur.com/LozL6Rm.png)
+![User profile page preview](https://i.imgur.com/3pf9FB7.png)
 3. Guide page
 ![Guide page preview](https://i.imgur.com/TF2FfHu.png)
 4. Preference form page
