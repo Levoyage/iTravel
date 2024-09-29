@@ -23,7 +23,6 @@ const UserAvatar = () => {
 
     try {
       const token = localStorage.getItem('token');
-      console.log("Using token: ", token);
 
       const response = await fetch('http://localhost:8080/upload_avatar', {
         method: 'POST',
@@ -38,22 +37,17 @@ const UserAvatar = () => {
       }
 
       const fileId = await response.text();
-
       const newAvatarUrl = `http://localhost:8080/download_avatar/${fileId}`;
-      console.log('Avatar uploaded successfully. New URL:', newAvatarUrl);
-      setAvatarPreview(newAvatarUrl);
-      updateUser({ isLoggedIn: true, user: { ...user, avatarUrl: fileId } }); // Update the user context with the new avatar URL
+      setAvatarPreview(newAvatarUrl); // Local state update only
 
-      // Debug logs
-      console.log('Avatar preview should be set to:', newAvatarUrl);
-      console.log('User context after upload:', user);
-
-      alert('File uploaded successfully: ' + fileId);
+      // Remove the updateUser call
+      // alert('File uploaded successfully: ' + fileId);
     } catch (error) {
       console.error('Error uploading file: ', error);
       alert('Error uploading file');
     }
   };
+
 
   const handleAvatarChange = (event) => {
     const file = event.target.files[0];
@@ -70,7 +64,10 @@ const UserAvatar = () => {
       <img src={avatarPreview} alt={user.username} className="profile-picture" />
       <div className="user-details">
         <h1>{user.username}</h1>
-        <input type="file" onChange={handleAvatarChange} className="avatar-upload" />
+        <label className="custom-upload-button">
+          Upload Avatar {/* Custom button text */}
+          <input type="file" onChange={handleAvatarChange} className="avatar-upload" />
+        </label>
       </div>
     </div>
   );

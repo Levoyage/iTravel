@@ -41,6 +41,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+
   // Handle login logic
   const login = async (username, password) => {
     try {

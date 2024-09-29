@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 import './ProfilePage.css'; // 引入新的样式文件
+import Modal from './Modal'; // Import the modal component
 
 const UserPOIs = () => {
   const { user } = useAuth();
   const [pois, setPois] = useState([]);
+  const [selectedPOI, setSelectedPOI] = useState(null); // For storing the POI to display in the modal
 
   useEffect(() => {
     if (user && user.id) { // 使用 id 而非 username
@@ -30,7 +32,6 @@ const UserPOIs = () => {
 
   // Handle delete POI
   const handleDeletePOI = async (poiId) => {
-    // Show a confirmation dialog before deleting
     const isConfirmed = window.confirm('Are you sure you want to delete this POI?');
     if (!isConfirmed) {
       return; // If the user cancels, exit the function
@@ -54,21 +55,38 @@ const UserPOIs = () => {
     }
   };
 
+  // Modal handler
+  const handleShowMore = (poi) => {
+    setSelectedPOI(poi); // Set the POI to be displayed in the modal
+  };
+
   return (
     <div className="items-container">
       {pois.length > 0 ? (
         pois.map(poi => (
-          <div key={poi.id} className="item-card"> {/* 使用 item-card 类创建卡片布局 */}
-            <img src={poi.imageUrl} alt={poi.name} className="poi-image" /> {/* 调整图片大小 */}
+          <div div key={poi.id} className="item-card">
+            <img src={poi.imageUrl} alt={poi.name} className="poi-image" />
             <div className="item-content">
               <h3>{poi.name}</h3>
               <p>{poi.description}</p>
-              <button onClick={() => handleDeletePOI(poi.id)} className="bg-black-500 text-white py-2 px-4 rounded hover:bg-black-700">Delete</button>
+            </div>
+            <div className="buttons-container">
+              <button className="show-more" onClick={() => handleShowMore(poi)}>Show More</button>
+              <button className="delete-button" onClick={() => handleDeletePOI(poi.id)}>Delete</button>
             </div>
           </div>
+
         ))
       ) : (
         <p>No POIs found.</p>
+      )}
+
+      {selectedPOI && (
+        <Modal onClose={() => setSelectedPOI(null)}>
+          <h3>{selectedPOI.name}</h3>
+          <img src={selectedPOI.imageUrl} alt={selectedPOI.name} className="poi-image" />
+          <p>{selectedPOI.description}</p>
+        </Modal>
       )}
     </div>
   );

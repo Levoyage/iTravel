@@ -1,0 +1,66 @@
+.guide-page {
+    padding: 20px;
+    text-align: center;
+}
+
+
+
+.guide-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 600px;
+    /* Ensure same max-width for the content and button-row */
+    text-align: left;
+}
+
+
+.guide-content {
+    margin-bottom: 20px;
+}
+
+.guide-content p {
+    margin: 10px 0;
+}
+
+.save-button {
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0 auto;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 160px;
+    /* Set fixed width for both buttons */
+}
+
+.save-button:hover {
+    background-color: gray;
+}
+
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    /* Ensures buttons are on left and right edges */
+    max-width: 600px;
+    /* Align with guide-card's max width */
+    margin: 0 auto;
+    /* Center the buttons container */
+    padding: 0;
+    /* Remove extra padding */
+}
+
+.save-message {
+    margin-top: 10px;
+    font-size: 16px;
+    color: green;
+}

@@ -20,7 +20,11 @@ const PreferenceForm = ({ onSubmit }) => {
     useEffect(() => {
         console.log("Received destination:", destination);
         console.log("User state:", user);
-    }, [destination,user]);
+    }, [destination, user]);
+
+    const capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    };
 
     const handleCheckboxChange = (position) => {
         const updatedCheckedState = checkedState.map((item, index) =>
@@ -46,7 +50,7 @@ const PreferenceForm = ({ onSubmit }) => {
                 <br></br>
                 <br></br>
                 <br></br>
-                <h2>Choose your interests for {destination}</h2>
+                <h2>Choose your interests for {capitalizeFirstLetter(destination)}</h2> {/* Capitalize first letter */}
                 <h3>I want to visit:</h3>
                 <div className="checkbox-group">
                     {categories.map((category, index) => (

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 import './ProfilePage.css';  // 继续使用 ProfilePage.css
+import Modal from './Modal'; // Import the modal component
 
 const UserGuides = () => {
   const { user } = useAuth();
   const [guides, setGuides] = useState([]);
+  const [selectedGuide, setSelectedGuide] = useState(null); // For storing the guide to display in the modal
 
   useEffect(() => {
     if (user && user.id) { // 使用 user.id
@@ -59,7 +61,7 @@ const UserGuides = () => {
     return destination.charAt(0).toUpperCase() + destination.slice(1).toLowerCase();
   };
 
-  // 渲染 guide 中的活动
+  // Render guide activities
   const renderGuideActivities = (activities) => {
     return activities.map((activity, index) => (
       <li key={index}>
@@ -68,7 +70,7 @@ const UserGuides = () => {
     ));
   };
 
-  // 渲染每个 day
+  // Render guide days
   const renderGuideDays = (guide) => {
     try {
       const parsedGuide = JSON.parse(guide); // 将 guide 字符串解析为对象
@@ -86,24 +88,41 @@ const UserGuides = () => {
     }
   };
 
+  // Modal handler
+  const handleShowMore = (guide) => {
+    setSelectedGuide(guide); // Set the guide to be displayed in the modal
+  };
+
   return (
     <div className="section">
       <div className="items-container">
         {guides.length > 0 ? (
           guides.map(guide => (
-            <div key={guide.id} className="item-card">  {/* 使用 item-card 进行卡片布局 */}
-              <h3>{capitalizeDestination(guide.destination)}</h3> {/* 调用 capitalizeDestination 函数 */}
+            <div key={guide.id} className="item-card">
+              <h3>{capitalizeDestination(guide.destination)}</h3>
               <p>{guide.description}</p>
               <div className="item-content">
                 {renderGuideDays(guide.guide)}
               </div>
-              <button onClick={() => handleDeleteGuide(guide.id)} className="bg-black-500 text-white py-2 px-4 rounded hover:bg-black-700">Delete</button>
+              <div className="buttons-container">
+                <button className="show-more" onClick={() => handleShowMore(guide)}>Show More</button>
+                <button className="delete-button" onClick={() => handleDeleteGuide(guide.id)}>Delete</button>
+              </div>
             </div>
+
           ))
         ) : (
           <p>No guides found.</p>
         )}
       </div>
+
+      {selectedGuide && (
+        <Modal onClose={() => setSelectedGuide(null)}>
+          <h3>{capitalizeDestination(selectedGuide.destination)}</h3>
+          <p>{selectedGuide.description}</p>
+          <div>{renderGuideDays(selectedGuide.guide)}</div>
+        </Modal>
+      )}
     </div>
   );
 };

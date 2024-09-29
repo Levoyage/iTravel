@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
+import './GuidePage.css';
 
 const GuidePage = ({ guide }) => {
   const location = useLocation();
@@ -15,6 +16,10 @@ const GuidePage = ({ guide }) => {
     console.log("User state:", user);
   }, [destination, guide, user]);
 
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   const handleSave = async () => {
     if (!user) {
       alert('Please log in');
@@ -22,14 +27,14 @@ const GuidePage = ({ guide }) => {
     }
 
     const token = localStorage.getItem('token');
-    console.log("JWT Token:", token); // 调试查看token
+    console.log("JWT Token:", token);
 
     const guideData = {
       userId: user.id,
-      destination: destination || "Unknown",  // 确保有目的地信息
-      guide: JSON.stringify(guide),  // 将指南内容转换为字符串
-      time: new Date().toISOString(),  // 添加时间戳
-      description: `Travel guide for ${destination}`  // 添加描述
+      destination: destination || "Unknown",
+      guide: JSON.stringify(guide),
+      time: new Date().toISOString(),
+      description: `Travel guide for ${destination}`
     };
 
     try {
@@ -51,6 +56,7 @@ const GuidePage = ({ guide }) => {
 
   return (
     <div className="p-5 text-center">
+      {destination && <h1 className="text-3xl font-bold mb-2">📍 {capitalizeFirstLetter(destination)}</h1>}
       {guide.length > 0 ? (
         <div>
           {guide.map((day, index) => (
@@ -66,25 +72,32 @@ const GuidePage = ({ guide }) => {
               </div>
             </div>
           ))}
-          <button
-            className="save-button bg-blue-500 text-white font-semibold py-2 px-4 rounded w-32 mx-auto mt-4 hover:bg-blue-700"
-            onClick={handleSave}
-          >
-            Save
-          </button>
+          <div className="button-row flex justify-between mt-4"> {/* No margin needed */}
+            <button
+              className="save-button bg-blue-500 text-white font-semibold py-2 px-4 rounded w-40 hover:bg-blue-700"
+              onClick={handleSave}
+            >
+              Save
+            </button>
+            <Link
+              to="/preferences"
+              state={{ destination }}
+              className="save-button bg-blue-500 text-white font-semibold py-2 px-4 rounded w-40 hover:bg-blue-700 text-center"
+              style={{ whiteSpace: 'pre-wrap' }}
+            >
+              Recommend
+              <br />
+              Attractions
+            </Link>
+          </div>
           {user && savedMessage && <p className="save-message text-green-500 font-semibold mt-2">{savedMessage}</p>}
         </div>
       ) : (
         <p className="text-lg font-semibold mt-4">No guide available. Please return home and submit a destination.</p>
       )}
-      <Link
-        to="/preferences"
-        state={{ destination }}
-        className="recommend-link block mt-6 text-blue-500 text-lg hover:underline"
-      >
-        Recommend Attractions and Activities
-      </Link>
     </div>
+
+
   );
 };
 

@@ -15,17 +15,17 @@ const ProfilePage = () => {
   }, [user, loading]);// 依赖项为 user 和 loading，只有它们变化时才会执行
 
   //在用户数据未加载完成时（即 loading 为 true），不进行重定向或者渲染内容，等待数据加载完成后再执行登录检查和渲染页面
-   if (loading) {
+  if (loading) {
     return <LoadingSpinner />;
   }
 
 
-    if (!user || !user.id) {
-        console.log('No user found, redirecting to login');
-    } else {
-        console.log('User found:', user);
-    }
-  
+  if (!user || !user.id) {
+    console.log('No user found, redirecting to login');
+  } else {
+    console.log('User found:', user);
+  }
+
 
   return (
     <div className="profile-container">
@@ -57,7 +57,7 @@ const ProfilePage = () => {
           <UserAvatar />
         </div>
         <div className="profile-container">
-          <Link to="/edit-profile">Edit Profile</Link>
+          {/* <Link to="/edit-profile">Edit Profile</Link> */}
         </div>
 
         {/* My Guides Section */}
