@@ -15,4 +15,5 @@ The deployment is currently in progress. Before that, you can review these previ
 ![Guide page preview](https://i.imgur.com/TF2FfHu.png)
 4. Preference form page
 ![Preference form page preview](https://i.imgur.com/I2ZLMyQ.png)
-
+5. Recommendation list page
+![Recommendation list page preview](https://i.imgur.com/pdi43is.jpeg)
