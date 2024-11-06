@@ -9,7 +9,6 @@ http://i-travel-app.s3-website-us-east-1.amazonaws.com/
 - [@Roxie](https://github.com/Roxie-Deng)
 
 
-The deployment is currently in progress. Before that, you can review these previews. :)
 1. Home Page(Photo by@Aria)
 ![Home page preview](https://i.imgur.com/vuuL7FG.jpeg)
 2. User profile page
