@@ -3,7 +3,7 @@ import axios from 'axios';
 import localforage from 'localforage';
 import { parseRecommendations, parseContent } from './parser';
 
-const API_URL = process.env.REACT_APP_API_URL ;
+const API_URL = process.env.REACT_APP_API_URL;
 
 localforage.config({
     driver: localforage.LOCALSTORAGE,
@@ -47,7 +47,7 @@ const generateCacheKey = (type, destination, bodyContent) => {
 
 const fetchImageUrl = async (query) => {
     try {
-        const response = await fetch(`http://localhost:5000/get_image`, {
+        const response = await fetch(`http://100.27.226.64:5000/get_image`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,6 +58,7 @@ const fetchImageUrl = async (query) => {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        console.log("Fetched image URL:", data.image_url);
         return data.image_url || 'https://via.placeholder.com/150';
     } catch (error) {
         console.error('Error fetching image URL:', error);

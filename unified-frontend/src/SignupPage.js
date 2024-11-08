@@ -7,7 +7,7 @@ const SignupPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState(''); // 添加确认密码状态
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { register, login } = useAuth();
@@ -24,18 +24,20 @@ const SignupPage = () => {
       setError('Password must be between 6 and 40 characters');
       return;
     }
-
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
-    }    
+    }
 
     try {
       console.log('Attempting to register with:', { username, email, password });
       await register(username, email, password);
       console.log('Registration successful');
 
-      // 注册成功后直接登录
+      // 显示成功注册的提示
+      alert('Registration successful! You are now logged in.');
+
+      // 注册成功后直接登录并重定向到首页
       await login(username, password);
       navigate('/');
     } catch (error) {
@@ -87,7 +89,7 @@ const SignupPage = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="confirm-password">Confirm Password</label> {/* 新增确认密码输入框 */}
+          <label htmlFor="confirm-password">Confirm Password</label>
           <input
             type="password"
             id="confirm-password"

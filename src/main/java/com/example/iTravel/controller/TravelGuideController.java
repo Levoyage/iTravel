@@ -15,7 +15,7 @@ import org.bson.types.ObjectId;
 
 @RestController
 @RequestMapping("/api/guides")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://i-travel-app.s3-website-us-east-1.amazonaws.com")
 public class TravelGuideController {
 
     @Autowired
@@ -30,6 +30,7 @@ public class TravelGuideController {
             return ResponseEntity.status(404).body("Travel Guide not found or invalid ID format");
         }
     }
+
 
     @PostMapping("/guide")
     public ResponseEntity<?> saveGuide(@RequestBody TravelGuide guide, HttpServletRequest request) {

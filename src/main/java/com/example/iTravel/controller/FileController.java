@@ -33,6 +33,7 @@ public class FileController {
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     // 文件上传
+    @CrossOrigin(origins = "http://i-travel-app.s3-website-us-east-1.amazonaws.com")
     @PostMapping("/upload_avatar")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         String fileId = fileStorageService.addFile(file);
@@ -55,6 +56,7 @@ public class FileController {
         return ResponseEntity.ok().body(fileId);
     }
 
+    @CrossOrigin(origins = "http://i-travel-app.s3-website-us-east-1.amazonaws.com")
     // 文件下载
     @GetMapping("/download_avatar/{fileId}")
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileId) throws IOException {

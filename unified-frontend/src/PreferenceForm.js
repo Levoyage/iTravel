@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import axios from 'axios';
 import './PreferenceForm.css';
 
 const PreferenceForm = ({ onSubmit }) => {
     const location = useLocation();
-    const { destination } = location.state || {};
     const navigate = useNavigate();
     const { user } = useAuth();
+
+    // 设置 destination 的默认值为小写
+    const { destination } = location.state || { destination: "your chosen destination" };
+
     const categories = [
         'Natural landscapes',
         'Historical landmarks',
@@ -23,6 +25,8 @@ const PreferenceForm = ({ onSubmit }) => {
     }, [destination, user]);
 
     const capitalizeFirstLetter = (string) => {
+        // 如果是默认值，不进行大小写转换
+        if (string === "your chosen destination") return string;
         return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
@@ -35,8 +39,8 @@ const PreferenceForm = ({ onSubmit }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!destination) {
-            console.error('Destination is required');
+        if (!destination || destination === "your chosen destination") {
+            alert('Please provide a destination before submitting.');
             return;
         }
         const selectedCategories = categories.filter((_, index) => checkedState[index]);
@@ -50,7 +54,7 @@ const PreferenceForm = ({ onSubmit }) => {
                 <br></br>
                 <br></br>
                 <br></br>
-                <h2>Choose your interests for {capitalizeFirstLetter(destination)}</h2> {/* Capitalize first letter */}
+                <h2>Choose your interests for {capitalizeFirstLetter(destination)}</h2>
                 <h3>I want to visit:</h3>
                 <div className="checkbox-group">
                     {categories.map((category, index) => (

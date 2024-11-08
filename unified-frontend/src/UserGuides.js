@@ -14,7 +14,7 @@ const UserGuides = () => {
       const fetchUserGuides = async () => {
         try {
           console.log(`Fetching guides for user ID: ${user.id}`); // 打印调试信息
-          const response = await axios.get(`http://localhost:8080/api/guides/user/${user.id}`, {
+          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/guides/user/${user.id}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`
             }
@@ -39,7 +39,7 @@ const UserGuides = () => {
 
     try {
       // Send delete request to the server
-      const response = await axios.delete(`http://localhost:8080/api/guides/delete/${guideId}`, {
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/guides/delete/${guideId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

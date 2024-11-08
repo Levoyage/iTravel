@@ -3,29 +3,40 @@ const parseRecommendations = async (text, fetchImageUrl) => {
     const lines = text.split('\n');
     let currentPOI = null;
 
+    if (!text || text.trim() === "") {
+        console.warn("Text content is empty.");
+        return [];
+    }
+
     for (const line of lines) {
         const match = line.match(/^\d+\.\s\*\*(.+?)\*\*\:\s(.+)/);
         if (match) {
-            if (currentPOI) {
+            if (currentPOI && currentPOI.name && currentPOI.description) {
                 recommendations.push(currentPOI);
             }
             const placeName = match[1];
+            const imageUrl = await fetchImageUrl(placeName);
+            if (!imageUrl) {
+                console.warn("Failed to fetch image URL for:", placeName);
+            }
             currentPOI = {
                 name: placeName,
                 description: match[2],
-                imageUrl: await fetchImageUrl(placeName)
+                imageUrl: imageUrl
             };
         } else if (currentPOI) {
             currentPOI.description += ' ' + line;
         }
     }
 
-    if (currentPOI) {
+    if (currentPOI && currentPOI.name && currentPOI.description) {
         recommendations.push(currentPOI);
     }
 
+    console.log("Final parsed recommendations:", recommendations); // 调试输出
     return recommendations;
 };
+
 
 const parseContent = (responseBody) => {
     const dayRegex = /-\s\*\*Day\s(\d+):\s(.*?)\*\*\n(.*?)(?=\n- \*\*Day|\n\n- \*\*Day|\n\*\*Day|$)/gs;

@@ -35,7 +35,7 @@ def get_image():
         if image_urls:
             # 提供相对路径
             relative_path = os.path.relpath(image_urls[0], os.path.join(os.getcwd(), 'dataset'))
-            image_url = f"http://localhost:5000/dataset/{relative_path.replace(os.sep, '/')}"
+            image_url = f"http://100.27.226.64:5000/dataset/{relative_path.replace(os.sep, '/')}"
             # 打印生成的 image_url 用于调试
             print(f"Generated image URL: {image_url}")
             return jsonify({"image_url": image_url})

@@ -14,7 +14,7 @@ const UserPOIs = () => {
       const fetchUserPOIs = async () => {
         try {
           console.log(`Fetching POIs for user ID: ${user.id}`); // 打印调试信息
-          const response = await axios.get(`http://localhost:8080/api/pois/user/${user.id}`, {
+          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/pois/user/${user.id}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`
             }
@@ -39,7 +39,7 @@ const UserPOIs = () => {
 
     try {
       // Send delete request to the server
-      const response = await axios.delete(`http://localhost:8080/api/pois/delete/${poiId}`, {
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/pois/delete/${poiId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

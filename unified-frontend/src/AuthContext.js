@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   // Check authentication by sending the token to the backend
   const checkAuth = async (token) => {
     try {
-      const response = await axios.get('http://localhost:8080/api/auth/me', {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data);
@@ -41,12 +41,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-
+  // Handle registration logic
+  const register = async (username, email, password) => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signup`, {
+        username,
+        email,
+        password,
+      });
+      return response.data;  // 返回注册数据，或者根据需要返回其他内容
+    } catch (error) {
+      console.error('Registration failed:', error);
+      throw error;
+    }
+  };
 
   // Handle login logic
   const login = async (username, password) => {
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', { username, password });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { username, password });
       const { token, ...userData } = response.data;
 
       // Store token and authenticated status
@@ -67,7 +80,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, register, login, logout, loading }}>
       {!loading ? children : <div>Loading...</div>}  {/* Show loading spinner */}
     </AuthContext.Provider>
   );

@@ -16,7 +16,7 @@ import org.bson.types.ObjectId;
 
 @RestController
 @RequestMapping("/api/pois")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://i-travel-app.s3-website-us-east-1.amazonaws.com")
 public class POIController {
 
     @Autowired

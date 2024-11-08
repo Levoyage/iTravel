@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/kimi")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://i-travel-app.s3-website-us-east-1.amazonaws.com")
 public class KimiController {
     private static final Logger logger = LoggerFactory.getLogger(KimiController.class);
 

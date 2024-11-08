@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext'; // Import useAuth for user context
 import axios from 'axios';
 import './RecommendationList.css';
@@ -16,7 +16,7 @@ const RecommendationList = ({ recommendations, onFetchMoreRecommendations, onSav
             alert('Please log in to save POIs');
             return;
         }
-    
+
         const poiData = {
             userId: user.id,
             name: poi.name,
@@ -27,10 +27,10 @@ const RecommendationList = ({ recommendations, onFetchMoreRecommendations, onSav
             imageUrl: poi.imageUrl,
             imageBytes: poi.imageBytes || []
         };
-    
+
         try {
             const response = await axios.post(
-                'http://localhost:8080/api/pois/save',  
+                `${process.env.REACT_APP_API_URL}/api/pois/save`,
                 poiData,
                 {
                     headers: {
@@ -38,7 +38,7 @@ const RecommendationList = ({ recommendations, onFetchMoreRecommendations, onSav
                     }
                 }
             );
-            
+
             setSavedPOI(poi.name);
         } catch (error) {
             console.error('Failed to save POI:', error);

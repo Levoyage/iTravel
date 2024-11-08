@@ -46,12 +46,6 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public JwtFilter jwtFilter() {
-        // 在这里传递 jwtSecret 给 JwtFilter 构造器
-        return new JwtFilter(jwtSecret);
-    }
-
-    @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
@@ -72,11 +66,15 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:3000",
+                "http://i-travel-app.s3-website-us-east-1.amazonaws.com"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization")); // 确保授权头部被暴露
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
         configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -85,26 +83,24 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Ensure CORS config is applied here
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 公共端点 - 允许未登录用户查看 guides 列表
-                        .requestMatchers("/", "/home", "/guide", "/guides/**", "/preferences", "/recommendations", "/pois","/api/auth/login", "/api/auth/signup" ,"/api/auth/me","/download_avatar/**").permitAll()
-                        // 需要认证的端点 - 限制访问 POST 请求
+                        .requestMatchers(
+                                "/", "/home", "/guide", "/guides/**", "/preferences",
+                                "/recommendations", "/pois", "/api/auth/login",
+                                "/api/auth/signup", "/api/auth/me", "/download_avatar/**"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/guides/guide").authenticated()
                         .requestMatchers("/test/**", "/upload_avatar").authenticated()
-                        // 未匹配上的其他请求所有用户可以访问
                         .anyRequest().permitAll()
                 );
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-
 }

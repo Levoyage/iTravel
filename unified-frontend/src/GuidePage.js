@@ -39,7 +39,7 @@ const GuidePage = ({ guide }) => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/guides/guide',
+        `${process.env.REACT_APP_API_URL}/api/guides/guide`,
         guideData,
         {
           headers: {

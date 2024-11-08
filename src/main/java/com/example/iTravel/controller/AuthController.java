@@ -54,6 +54,7 @@ public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
+    @CrossOrigin(origins = "http://i-travel-app.s3-website-us-east-1.amazonaws.com")
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         logger.info("Received login request: " + loginRequest);
@@ -104,7 +105,7 @@ public class AuthController {
         }
     }
 
-
+    @CrossOrigin(origins = "http://i-travel-app.s3-website-us-east-1.amazonaws.com")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         logger.info("Received signup request for username: " + signUpRequest.getUsername());
@@ -146,6 +147,7 @@ public class AuthController {
         }
     }
 
+    @CrossOrigin(origins = "http://i-travel-app.s3-website-us-east-1.amazonaws.com")
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
