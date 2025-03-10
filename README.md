@@ -21,4 +21,4 @@ http://i-travel-app.s3-website-us-east-1.amazonaws.com/
 ![Recommendation list page preview](https://i.imgur.com/pdi43is.jpeg)
 
 ## API Documentation  
-The RESTful APIs details refer to** [API Docs](./api-docs).
+The RESTful APIs details refer to [API Docs](./api-docs).
