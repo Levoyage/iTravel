@@ -1,7 +1,8 @@
 iTravel 1.0 Version, capable of generating travel itineraries based on user-entered destinations and recommending attractions based on a user-completed interest questionnaire. Registered users can manage their own travel guides and points of interest (POIs), including saving, retrieving, and deleting them. It features a decoupled architecture using React for the frontend and Spring Boot along with the kimi API for backend services.
 
 Please click the link to view👉
-http://i-travel-app.s3-website-us-east-1.amazonaws.com/
+https://itravel-frontend-deploy.onrender.com/
+~~http://i-travel-app.s3-website-us-east-1.amazonaws.com/~~
 
 ## Collaborators
 
